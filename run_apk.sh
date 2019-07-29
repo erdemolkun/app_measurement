@@ -10,6 +10,7 @@ SLEEP=1
 
 logCatResult=""
 successCount=0
+totalDuration=0
 
 prevent_sleep() {
   adb shell input keyevent 82
@@ -36,21 +37,25 @@ sleep_now
 for ((i=0;i<$REPEAT_COUNT;i++)); do
     start_app
     logCatResult="$(adb logcat -d -t 2000 | grep 'ActivityManager: Displayed')"
-    echo "RESULT : $logCatResult\n"
+    #echo "LOGCAT RESULT : $logCatResult"
 
 if [ ! -z "$logCatResult" ]
-then
-	#TODO get time from $logCatResult
+then	
+	#duration=$(echo $logCatResult|cut -d" " -f 18|cut -c2-|cut -d"m" -f1)
+	duration=$(echo ${logCatResult##*:}|cut -d"m" -f1)
+	totalDuration=$((totalDuration+duration))
+	echo "Parsed Duration : $duration\n"
 	successCount=$((successCount+1))    
 fi	
-
     sleep_now
     prevent_sleep
 	kill_app
 	sleep_now
 done
 
-echo "\nSuccess Ratio :  $successCount/$REPEAT_COUNT\n"
+echo "Average Boot Duration :  $((totalDuration/successCount))"
+#echo "\ntotalDuration :  $totalDuration\n"
+echo "Success Ratio :  $successCount/$REPEAT_COUNT\n"
 
 
 
