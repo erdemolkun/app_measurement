@@ -42,8 +42,8 @@ sleep_now
 
 for ((i=0;i<$REPEAT_COUNT;i++)); do
     start_app
-    logCatResult="$(adb logcat -d -t 2000 | grep 'ActivityManager: Displayed')"
-    echo "LOGCAT RESULT : $logCatResult" # TODO detect if another activity log
+    logCatResult="$(adb logcat -d -t 2000 | grep $START_ACTIVITY_PATH | grep 'ActivityTaskManager: Displayed')"
+    echo "LOGCAT RESULT : $logCatResult"
 
 	if [ ! -z "$logCatResult" ]; then	
 		#duration=$(echo $logCatResult|cut -d" " -f 18|cut -c2-|cut -d"m" -f1)
