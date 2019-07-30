@@ -17,6 +17,7 @@ echo "\n\nActivity-> $1 | Package-> $2 | Times-> $3 | Sleep-> $SLEEP seconds\n"
 logCatResult=""
 successCount=0
 totalDuration=0
+totalPssMemory=0;
 
 prevent_sleep() {
   adb shell input keyevent 82
@@ -42,10 +43,12 @@ sleep_now
 
 for ((i=0;i<$REPEAT_COUNT;i++)); do
     start_app
-    logCatResult="$(adb logcat -d -t 2000 | grep $START_ACTIVITY_PATH | grep 'ActivityTaskManager: Displayed')"
+    
+    #logCatResult="$(adb logcat -d -t 2000 | grep $START_ACTIVITY_PATH | grep 'ActivityTaskManager: Displayed')"
+    logCatResult="$(adb logcat -d -t 2000 | grep 'ActivityManager: Displayed')"
     echo "LOGCAT RESULT : $logCatResult"
-
-	if [ ! -z "$logCatResult" ]; then	
+    
+    if [ ! -z "$logCatResult" ]; then	
 		#duration=$(echo $logCatResult|cut -d" " -f 18|cut -c2-|cut -d"m" -f1)
 		duration=$(echo ${logCatResult##*:}|cut -d"m" -f1) # 1s200ms TODO parse this
 		echo "Duration : $duration"
@@ -77,6 +80,10 @@ for ((i=0;i<$REPEAT_COUNT;i++)); do
 		totalDuration=$((totalDuration+duration))
 		#echo "Parsed Duration : $duration totalDuration : $totalDuration parsedMs : $parsedMs\n"
 		successCount=$((successCount+1))
+		sleep_now
+    	totalPssMemoryInner="$(adb shell dumpsys meminfo com.turkcell.bip | grep 'TOTAL:'|cut -d':' -f2|cut -d'T' -f1)"
+    	totalPssMemory=$((totalPssMemory+totalPssMemoryInner))
+    	echo "totalPssMemoryInner  : $totalPssMemoryInner"
 	fi
 
 	    
@@ -87,6 +94,7 @@ for ((i=0;i<$REPEAT_COUNT;i++)); do
 	sleep_now
 done
 
+echo "Average Memory Usage :  $((totalPssMemory/successCount))"
 echo "Success Ratio :  $successCount/$REPEAT_COUNT"
 echo "Average Boot Duration :  $((totalDuration/successCount)) ms"
 
