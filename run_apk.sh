@@ -39,13 +39,13 @@ start_app(){
 
 prevent_sleep
 kill_app
-sleep_now
+#sleep_now
 
 for ((i=0;i<$REPEAT_COUNT;i++)); do
     start_app
-    
+    sleep_now
     #logCatResult="$(adb logcat -d -t 2000 | grep $START_ACTIVITY_PATH | grep 'ActivityTaskManager: Displayed')"
-    logCatResult="$(adb logcat -d -t 2000 | grep 'ActivityManager: Displayed')"
+    logCatResult="$(adb logcat -d -t 2000 | grep ': Displayed')"
     echo "LOGCAT RESULT : $logCatResult"
     
     if [ ! -z "$logCatResult" ]; then	
