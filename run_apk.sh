@@ -1,18 +1,42 @@
+if ! type adb; then
+    echo "adb not found"
+    echo "check PATH"
+    exit
+fi
 
-echo "------------------ Starting Tests   ---------------"
+adbDevices="$(echo $(adb devices) | cut -d' ' -f5)"
+
+if [ ! -z "$adbDevices" ]; then	
+	echo "Device Attached"
+else
+	echo "Device Not Attached Exiting"
+	exit
+fi		
+
+echo "---------------- Starting Tests   ---------------"
+
+$(adb shell getprop ro.build.version.sdk > /tmp/aa) 
+deviceSdkVersion=$(cat /tmp/aa|tr -d $'\r')
+
+echo "Android SDK Version:$deviceSdkVersion"
 
 START_ACTIVITY_PATH=$1
 PACKAGE=$2
 REPEAT_COUNT=$3
 
+MIN_SDK_FOR_MEMORY=21
+MIN_SDK=$(( MIN_SDK_FOR_MEMORY ))
+SDK_VER=$((deviceSdkVersion))
+
 SLEEP=.6
 
+# Assign command parameter to sleep if available
 if [ ! -z "$4" ]; then	
 	SLEEP=$4	
 fi
 
 
-echo "\n\nActivity-> $1 | Package-> $2 | Times-> $3 | Sleep-> $SLEEP seconds\n"
+echo "Activity-> $1 | Package-> $2 | Times-> $3 | Sleep-> $SLEEP seconds"
 
 logCatResult=""
 successCount=0
@@ -42,11 +66,12 @@ kill_app
 #sleep_now
 
 for ((i=0;i<$REPEAT_COUNT;i++)); do
+	echo
     start_app
     sleep_now
     #logCatResult="$(adb logcat -d -t 2000 | grep $START_ACTIVITY_PATH | grep 'ActivityTaskManager: Displayed')"
     logCatResult="$(adb logcat -d -t 2000 | grep ': Displayed')"
-    echo "LOGCAT RESULT : $logCatResult"
+    #echo "LOGCAT RESULT : $logCatResult"
     
     if [ ! -z "$logCatResult" ]; then	
 		#duration=$(echo $logCatResult|cut -d" " -f 18|cut -c2-|cut -d"m" -f1)
@@ -81,9 +106,16 @@ for ((i=0;i<$REPEAT_COUNT;i++)); do
 		#echo "Parsed Duration : $duration totalDuration : $totalDuration parsedMs : $parsedMs\n"
 		successCount=$((successCount+1))
 		sleep_now
-    	totalPssMemoryInner="$(adb shell dumpsys meminfo com.turkcell.bip | grep 'TOTAL:'|cut -d':' -f2|cut -d'T' -f1)"
+
+		if [ "$SDK_VER" -gt "$MIN_SDK" ]; then			
+			totalPssMemoryInner="$(adb shell dumpsys meminfo com.turkcell.bip | grep 'TOTAL:'|cut -d':' -f2|cut -d'T' -f1)"
+    	else
+    		totalPssMemoryInner="$(adb shell dumpsys meminfo com.turkcell.bip | grep 'TOTAL' | tr -s ' '|cut -d ' ' -f 3)"
+		fi
+    	
+    	#adb shell dumpsys meminfo com.turkcell.bip | grep 'TOTAL' | tr -s ' '|cut -d ' ' -f 3 # old devices
     	totalPssMemory=$((totalPssMemory+totalPssMemoryInner))
-    	echo "totalPssMemoryInner  : $totalPssMemoryInner"
+    	echo "Memory Used  : $totalPssMemoryInner"
 	fi
 
 	    
@@ -94,9 +126,10 @@ for ((i=0;i<$REPEAT_COUNT;i++)); do
 	sleep_now
 done
 
+echo "\n-------- RESULTS ---------\n"
 echo "Average Memory Usage :  $((totalPssMemory/successCount))"
-echo "Success Ratio :  $successCount/$REPEAT_COUNT"
 echo "Average Boot Duration :  $((totalDuration/successCount)) ms"
+echo "Success Ratio :  $successCount/$REPEAT_COUNT"
 
 
 
