@@ -1,7 +1,7 @@
 #!/bin/bash
 usage() { echo "Usage: $0 [-s <com.package.name/activity] [-p <com.package.name>]" 1>&2; exit 1; }
 
-while getopts ":s:p:" o; do
+while getopts ":s:" o; do
     case "${o}" in
         s)
             s=${OPTARG}
@@ -17,7 +17,8 @@ while getopts ":s:p:" o; do
 done
 shift $((OPTIND-1))
 
-if [ -z "${s}" ] || [ -z "${p}" ]; then
+#if [ -z "${s}" ] || [ -z "${p}" ]; then
+if [ -z "${s}" ]]; then
     usage
 fi
 
@@ -25,9 +26,19 @@ fi
 echo "s = ${s}"
 echo "p = ${p}"
 
+
 START_ACTIVITY_PATH=${s}
-PACKAGE=${p}
+
+if [ ! -z "${p}" ]; then
+	echo "y"
+    PACKAGE=""
+else
+	#echo "xxxx s: ${s}"
+	PACKAGE="$(echo ${s} | cut -d "/" -f 1)"
+fi
+
 REPEAT_COUNT=$1
+
 
 if [ -z "${1}" ]; then
     REPEAT_COUNT=1
@@ -41,6 +52,7 @@ if [ ! -z "$2" ]; then
 	SLEEP_DURATION="$2" 	
 fi
 
+echo "PACKAGE : $PACKAGE"
 echo "REPEAT_COUNT : $REPEAT_COUNT"
 echo "SLEEP_DURATION : $SLEEP_DURATION"
 
