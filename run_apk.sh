@@ -175,6 +175,7 @@ echo
 echo "-------- RESULTS ---------"
 echo
 echo "PACKAGE   : $PACKAGE"
+echo "VERSION   : "$(adb shell dumpsys package $PACKAGE | grep versionName | cut -d "=" -f 2)
 echo "DEVICE    : "$(adb shell getprop ro.product.manufacturer)" "$(adb shell getprop ro.product.model)
 
 if((successCount<=0)); then
