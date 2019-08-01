@@ -173,6 +173,9 @@ done
 
 echo
 echo "-------- RESULTS ---------"
+echo
+echo "PACKAGE   : $PACKAGE"
+echo "DEVICE    : "$(adb shell getprop ro.product.manufacturer)" "$(adb shell getprop ro.product.model)
 
 if((successCount<=0)); then
 	echo "Insufficent Result Count !!!"
