@@ -18,7 +18,7 @@ done
 shift $((OPTIND-1))
 
 #if [ -z "${s}" ] || [ -z "${p}" ]; then
-if [ -z "${s}" ]]; then
+if [ -z "${s}" ]; then
     usage
 fi
 
