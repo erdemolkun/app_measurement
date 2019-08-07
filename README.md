@@ -1,3 +1,5 @@
+* OS
+  * For windows install git-bash. (https://git-scm.com/downloads) and run command
 
 * SDK
 
