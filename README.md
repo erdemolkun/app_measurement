@@ -1,8 +1,14 @@
 
-# Sample command
+* Usage
 
 ```bash
-./run_apk.sh -s com.instagram.android/.activity.MainTabActivity 5 1
+Usage: ./run_apk.sh [-s <com.package.name/activity_name] [-c <count ex : 5>] [1 <sleep duration>]
+```
+
+* Sample command
+
+```bash
+./run_apk.sh -s com.instagram.android/.activity.MainTabActivity -c 5 2
 ```
 
 * Sample Outputs

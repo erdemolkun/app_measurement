@@ -1,10 +1,14 @@
 #!/bin/bash
-usage() { echo "Usage: $0 [-s <com.package.name/activity] [-p <com.package.name>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-s <com.package.name/activity] [-c <count ex : 5>]" 1>&2; exit 1; }
 
-while getopts ":s:" o; do
+while getopts ":s:c:" o; do
     case "${o}" in
         s)
             s=${OPTARG}
+            #((s == 45 || s == 90)) || usage
+            ;;
+        c)
+            c=${OPTARG}
             #((s == 45 || s == 90)) || usage
             ;;
         p)
@@ -17,39 +21,38 @@ while getopts ":s:" o; do
 done
 shift $((OPTIND-1))
 
-#if [ -z "${s}" ] || [ -z "${p}" ]; then
 if [ -z "${s}" ]; then
     usage
 fi
 
-
 echo "s = ${s}"
 echo "p = ${p}"
-
+echo "c = ${c}"
 
 START_ACTIVITY_PATH=${s}
 
 if [ ! -z "${p}" ]; then
-	echo "y"
-    PACKAGE=""
+	echo "${p}"
+    PACKAGE=${p}
 else
 	#echo "xxxx s: ${s}"
 	PACKAGE="$(echo ${s} | cut -d "/" -f 1)"
 fi
 
-REPEAT_COUNT=$1
+REPEAT_COUNT=2
 
-
-if [ -z "${1}" ]; then
-    REPEAT_COUNT=1
+if [ ! -z "${c}" ]; then
+    REPEAT_COUNT=${c}
+    REPEAT_COUNT=$((REPEAT_COUNT))
 fi
+
 
 # Default sleep value
 SLEEP_DURATION=1
 
 # Assign command parameter to sleep if available
-if [ ! -z "$2" ]; then	
-	SLEEP_DURATION="$2" 	
+if [ ! -z "$1" ]; then	
+	SLEEP_DURATION="$1" 	
 fi
 
 echo "PACKAGE : $PACKAGE"
