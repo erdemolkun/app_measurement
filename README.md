@@ -1,8 +1,12 @@
 
+* SDK
+
+Minimum supported android version : 21
+
 * Usage
 
 ```bash
-Usage: ./run_apk.sh [-s <com.package.name/activity_name] [-c <count ex : 5>] [1 <sleep duration>]
+./run_apk.sh [-s <com.package.name/activity_name] [-c <count ex : 5>] [1 <sleep duration>]
 ```
 
 * Sample command

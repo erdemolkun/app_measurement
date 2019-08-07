@@ -74,8 +74,6 @@ else
 	exit
 fi		
 
-echo "---------------- Starting Tests   ---------------"
-
 $(adb shell getprop ro.build.version.sdk > /tmp/aa) 
 deviceSdkVersion=$(cat /tmp/aa|tr -d $'\r')
 
@@ -85,6 +83,15 @@ echo "Android SDK Version:$deviceSdkVersion"
 MIN_SDK_FOR_MEMORY=21
 MIN_SDK=$(( MIN_SDK_FOR_MEMORY ))
 SDK_VER=$((deviceSdkVersion))
+
+
+if [ "$SDK_VER" -lt "$MIN_SDK" ]; then			
+	echo "SDK Version not supported. Min sdk : 21"
+	exit
+fi
+
+
+echo "---------------- Starting Tests   ---------------"
 
 
 logCatResult=""
