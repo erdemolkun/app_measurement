@@ -12,4 +12,6 @@ Popular Packages
 | Launcher Samsung | com.sec.android.app.launcher/.activities.LauncherActivity |
 | Calculator | com.google.android.calculator/com.android.calculator2.Calculator |
 | Instagram | com.instagram.android/.activity.MainTabActivity |
+| Google Play | com.android.vending/.AssetBrowserActivity |
+
 
