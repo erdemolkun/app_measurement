@@ -176,6 +176,14 @@ for ((i=0;i<$REPEAT_COUNT;i++)); do
     	#adb shell dumpsys meminfo com.turkcell.bip | grep 'TOTAL' | tr -s ' '|cut -d ' ' -f 3 # old devices
     	totalPssMemory=$((totalPssMemory+totalPssMemoryInner))
     	echo "Memory Used  : $totalPssMemoryInner"
+
+    	# Run custom commands
+		if [ ! -z "$2" ]; then	
+    		chmod +x $2	
+    		./$2 $PACKAGE	
+		fi		
+
+    
 	fi
 
 	    
