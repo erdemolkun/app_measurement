@@ -103,6 +103,10 @@ prevent_sleep() {
   adb shell input keyevent 82
 }
 
+sleep_now_short(){
+	sleep 1
+}
+
 sleep_now(){
 	#echo "Sleeping $SLEEP_DURATION seconds"
 	sleep $((SLEEP_DURATION))
@@ -161,7 +165,7 @@ for ((i=0;i<$REPEAT_COUNT;i++)); do
 		totalDuration=$((totalDuration+duration))
 		#echo "Parsed Duration : $duration totalDuration : $totalDuration parsedMs : $parsedMs\n"
 		successCount=$((successCount+1))
-		sleep_now
+		sleep_now_short
 		
 		if [ "$SDK_VER" -gt "$MIN_SDK" ]; then			
 			totalPssMemoryInner="$(adb shell dumpsys meminfo $PACKAGE | grep 'TOTAL:'|cut -d':' -f2|cut -d'T' -f1)"
@@ -178,7 +182,7 @@ for ((i=0;i<$REPEAT_COUNT;i++)); do
 	#fi	
     prevent_sleep
 	kill_app
-	sleep_now
+	sleep_now_short
 done
 
 echo
