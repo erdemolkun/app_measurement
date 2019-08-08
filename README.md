@@ -1,26 +1,29 @@
-* OS
-  * For windows install git-bash. (https://git-scm.com/downloads) and run command
+## App Measurement
 
-* SDK
+This is command line tool to measure various metrics for android applications. All you need is application start activity path. Popular application path can be found [here](packages.md). Current coldboot time and memory usages are measured.
 
-Minimum supported android version : 21
+### OS
+  * For windows install git-bash. Can be download [here](http://daringfireball.net/projects/markdown/syntax). 
 
-* Usage
+#### SDK
 
-```bash
-./run_apk.sh [-s <com.package.name/activity_name] [-c <count ex : 5>] [1 <sleep duration>]
+  * Minimum supported android version is Lollipop 5.0 (API : 21) [API Levels] (https://source.android.com/setup/start/build-numbers)
+
+#### Usage
+
+```
+./run_apk.sh [-s <com.package.name/activity_name] [-c <count ex : 5>] [2 <sleep duration>]
 ```
 
-* Sample command
+#### Sample command
 
-```bash
+```
 ./run_apk.sh -s com.instagram.android/.activity.MainTabActivity -c 5 2
 ```
 
-* Sample Outputs
+#### Demo Outputs
 
-```bash
-
+```
 PACKAGE   : com.whatsapp
 VERSION   : 2.19.203
 DEVICE    : HUAWEI LYA-L09
