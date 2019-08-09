@@ -91,6 +91,7 @@ if [ "$SDK_VER" -lt "$MIN_SDK" ]; then
 fi
 
 
+echo
 echo "---------------- Starting Tests   ---------------"
 
 
@@ -123,7 +124,6 @@ start_app(){
 
 prevent_sleep
 kill_app
-#sleep_now
 
 for ((i=0;i<$REPEAT_COUNT;i++)); do
 	echo
@@ -163,15 +163,10 @@ for ((i=0;i<$REPEAT_COUNT;i++)); do
 		
 		duration=$((parsedMs))	
 		totalDuration=$((totalDuration+duration))
-		#echo "Parsed Duration : $duration totalDuration : $totalDuration parsedMs : $parsedMs\n"
 		successCount=$((successCount+1))
 		sleep_now_short
 		
-		if [ "$SDK_VER" -gt "$MIN_SDK" ]; then			
-			totalPssMemoryInner="$(adb shell dumpsys meminfo $PACKAGE | grep 'TOTAL:'|cut -d':' -f2|cut -d'T' -f1)"
-    	else
-    		totalPssMemoryInner="$(adb shell dumpsys meminfo $PACKAGE | grep 'TOTAL' | tr -s ' '|cut -d ' ' -f 3)"
-		fi
+		totalPssMemoryInner="$(adb shell dumpsys meminfo $PACKAGE | grep 'TOTAL:'|cut -d':' -f2|cut -d'T' -f1)"
     	
     	#adb shell dumpsys meminfo com.turkcell.bip | grep 'TOTAL' | tr -s ' '|cut -d ' ' -f 3 # old devices
     	totalPssMemory=$((totalPssMemory+totalPssMemoryInner))
@@ -185,9 +180,7 @@ for ((i=0;i<$REPEAT_COUNT;i++)); do
 
     
 	fi
-
 	    
-	#fi	
     prevent_sleep
 	kill_app
 	sleep_now_short
