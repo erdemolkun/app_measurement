@@ -3,7 +3,7 @@
 This is command line tool to measure various metrics for android applications. All you need is application start activity path. Popular application path can be found [here](packages.md). Current coldboot time and memory usages are measured.
 
 ### OS
-  * For windows install git-bash. Can be download [here](http://daringfireball.net/projects/markdown/syntax). 
+  * For windows install git-bash. Can be download [here](https://git-scm.com/downloads). 
 
 #### SDK
 
